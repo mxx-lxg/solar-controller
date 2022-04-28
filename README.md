@@ -1,4 +1,4 @@
-# pool-controller
+# solar-controller
 Simple Arduino Uno-based PlatformIO project to control solar heating for swimming pools. The purpose of this controller is to save energy by not letting the circulation-pump run permanently. 
 
 All you need is an Arduino Uno, a relay (that can handle a pump) and two temperature sensors.
