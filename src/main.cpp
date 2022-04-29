@@ -11,7 +11,7 @@
 #define FLUSH_DURATION 5L
 #define PUMP_DURATION 10L
 
-//Temperatur-Toleranz
+//Temperatur-Toleranz in °C
 #define TOLERANCE 1
 
 //Temperaturen und Status ausgeben
@@ -33,10 +33,12 @@ float getOut(){
 }
 
 void setup() {
-  // put your setup code here, to run once:
+  //Pin-Belegung
   pinMode(RELAY, OUTPUT);
   pinMode(TEMP_IN, INPUT);
   pinMode(TEMP_OUT, INPUT);
+
+  //Serieller Kram für Serial Plotter
   Serial.begin(9600);
   Serial.println("Eingang Ausgang Status");
 }
