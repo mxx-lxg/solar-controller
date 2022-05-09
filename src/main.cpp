@@ -1,9 +1,17 @@
 #include <Arduino.h>
+#include <OneWire.h>
+#include <DallasTemperature.h>
 
 //Pins
 #define RELAY 13
 #define TEMP_IN 2
 #define TEMP_OUT 3
+
+OneWire oneWireA(TEMP_IN);
+DallasTemperature sensorsA(&oneWireA);
+
+OneWire oneWireB(TEMP_OUT);
+DallasTemperature sensorsB(&oneWireB);
 
 
 //Angaben in Sekunden
@@ -12,31 +20,36 @@
 #define PUMP_DURATION 10L
 
 //Temperatur-Toleranz in °C
-#define TOLERANCE 1
+#define TOLERANCE 3
 
 //Temperaturen und Status ausgeben
 void printTemp(char state, float in, float out){
     Serial.print(in);
     Serial.print(" ");
     Serial.print(out);
+    Serial.print(" ");
     Serial.println(state);
 }
 
 //Temperatur Eingang
 float getIn(){
-  return 23;
+  sensorsA.requestTemperatures();
+  return sensorsA.getTempCByIndex(0);
 }
 
 //Temperatur Ausgang
 float getOut(){
-  return 24;
+  sensorsB.requestTemperatures();
+  return sensorsB.getTempCByIndex(0);
 }
 
 void setup() {
   //Pin-Belegung
   pinMode(RELAY, OUTPUT);
-  pinMode(TEMP_IN, INPUT);
-  pinMode(TEMP_OUT, INPUT);
+  
+  // Start up the library
+  sensorsA.begin();
+  sensorsB.begin();
 
   //Serieller Kram für Serial Plotter
   Serial.begin(9600);
@@ -45,14 +58,14 @@ void setup() {
 
 void loop() {
   //flush
-  printTemp('1', getIn(), getOut());
+  printTemp('10', getIn(), getOut());
   digitalWrite(RELAY, HIGH);
   delay(FLUSH_DURATION * 1000);
   
   //messen
   float tempIn = getIn();
   float tempOut = getOut(); 
-  printTemp('1', tempIn, tempOut);
+  printTemp('10', tempIn, tempOut);
 
   if(tempOut <= tempIn + TOLERANCE){
     //Temperatur niedriger > warten 
@@ -61,7 +74,7 @@ void loop() {
     delay(FLUSH_INTERVAL * 1000);
   } else {
     //Temperatur höher 
-    printTemp('2', tempIn, tempOut);
+    printTemp('20', tempIn, tempOut);
     delay(PUMP_DURATION * 1000);
   }
 }
