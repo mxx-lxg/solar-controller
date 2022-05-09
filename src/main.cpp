@@ -59,6 +59,7 @@ void setup() {
   Serial.println("Solar-Controller bereit");
 }
 
+
 void loop() {
   //flush
   printTemp("spülen", getIn(), getOut());
@@ -68,6 +69,7 @@ void loop() {
   //messen
   float tempIn = getIn();
   float tempOut = getOut(); 
+  
   printTemp("spülen fertig", tempIn, tempOut);
 
   if(tempOut <= tempIn + TURNON_TOLERANCE){
