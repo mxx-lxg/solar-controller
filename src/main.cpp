@@ -16,12 +16,13 @@ DallasTemperature sensorsB(&oneWireB);
 
 
 //Zeitangaben in Sekunden
-#define FLUSH_INTERVAL 10L
-#define FLUSH_DURATION 5L
-#define PUMP_DURATION 10L
+#define FLUSH_INTERVAL 10L //Wie oft solll im Warte-Zustand geprüft werden
+#define FLUSH_DURATION 5L //Pumpen-Laufzeit zur Prüfung
+#define PUMP_DURATION 5L //Wartezeit zur nächsten Prüfung/Messung
 
 //Temperatur-Toleranz in °C
-#define TOLERANCE 3
+#define TURNON_TOLERANCE 3
+#define TURNOFF_TOLERANCE 1
 
 //Temperaturen und Status ausgeben
 void printTemp(String state, float in, float out){
@@ -69,7 +70,7 @@ void loop() {
   float tempOut = getOut(); 
   printTemp("spülen fertig", tempIn, tempOut);
 
-  if(tempOut <= tempIn + TOLERANCE){
+  if(tempOut <= tempIn + TURNON_TOLERANCE){
     //Temperatur niedriger > warten 
     printTemp("warten", tempIn, tempOut);
     digitalWrite(RELAY, LOW);
@@ -77,9 +78,18 @@ void loop() {
   } else {
     //Temperatur höher 
     printTemp("heizen", tempIn, tempOut);
-    delay(PUMP_DURATION * 1000);
+    //delay(PUMP_DURATION * 1000); //ohne Prüfung feste Zeit laufen
     
-    //TODO Vlt dynamischer?
-    
+
+    //laufen mit Zwischenprüfung (dynamischer)
+    float checkIn = getIn();
+    float checkOut = getOut(); 
+
+    while(checkOut <= checkIn + TURNOFF_TOLERANCE){
+      checkIn = getIn();
+      checkOut = getOut(); 
+      printTemp("heizen", checkIn, checkOut);
+      delay(PUMP_DURATION * 1000);
+    }
   }
 }
