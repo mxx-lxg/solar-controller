@@ -47,7 +47,7 @@ float getOut(){
 }
 
 void setup() {
-  //Pin-Belegung
+  //Relais Pin-Belegung
   pinMode(RELAY, OUTPUT);
   
   //Sensor Initialisierung
@@ -85,7 +85,7 @@ void loop() {
     float checkIn = getIn();
     float checkOut = getOut(); 
 
-    while(checkOut <= checkIn + TURNOFF_TOLERANCE){
+    while(checkOut > checkIn + TURNOFF_TOLERANCE){
       checkIn = getIn();
       checkOut = getOut(); 
       printTemp("heizen", checkIn, checkOut);
