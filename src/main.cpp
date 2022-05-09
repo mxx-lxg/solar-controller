@@ -7,6 +7,7 @@
 #define TEMP_IN 2
 #define TEMP_OUT 3
 
+//Sensor Objekte
 OneWire oneWireA(TEMP_IN);
 DallasTemperature sensorsA(&oneWireA);
 
@@ -14,7 +15,7 @@ OneWire oneWireB(TEMP_OUT);
 DallasTemperature sensorsB(&oneWireB);
 
 
-//Angaben in Sekunden
+//Zeitangaben in Sekunden
 #define FLUSH_INTERVAL 10L
 #define FLUSH_DURATION 5L
 #define PUMP_DURATION 10L
@@ -24,7 +25,7 @@ DallasTemperature sensorsB(&oneWireB);
 
 //Temperaturen und Status ausgeben
 void printTemp(String state, float in, float out){
-    Serial.print("EIngang: ");
+    Serial.print("Eingang: ");
     Serial.print(in);
     Serial.print("°C | Ausgang: ");
     Serial.print(out);
@@ -48,11 +49,11 @@ void setup() {
   //Pin-Belegung
   pinMode(RELAY, OUTPUT);
   
-  // Start up the library
+  //Sensor Initialisierung
   sensorsA.begin();
   sensorsB.begin();
 
-  //Serieller Kram für Serial Plotter
+  //Serieller Kram für Serial Monitor
   Serial.begin(9600);
   Serial.println("Solar-Controller bereit");
 }
@@ -77,5 +78,8 @@ void loop() {
     //Temperatur höher 
     printTemp("heizen", tempIn, tempOut);
     delay(PUMP_DURATION * 1000);
+    
+    //TODO Vlt dynamischer?
+    
   }
 }
