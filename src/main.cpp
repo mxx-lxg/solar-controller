@@ -86,14 +86,12 @@ void loop() {
     float checkOut = getOut(); 
 
     while(checkOut > checkIn + TURNOFF_TOLERANCE){
-      checkIn = getIn();
-      checkOut = getOut(); 
       printTemp("heizen", checkIn, checkOut);
       delay(PUMP_DURATION * 1000);
+      checkIn = getIn();
+      checkOut = getOut(); 
     }
     
-    checkIn = getIn();
-    checkOut = getOut(); 
     printTemp("heizen fertig", checkIn, checkOut);
   }
 }
