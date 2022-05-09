@@ -73,10 +73,8 @@ void loop() {
   printTemp("spülen fertig", tempIn, tempOut);
 
   if(tempOut <= tempIn + TURNON_TOLERANCE){
-    //Temperatur niedriger > warten 
+    //Temperatur niedriger > nichts tun 
     printTemp("warten", tempIn, tempOut);
-    digitalWrite(RELAY, LOW);
-    delay(FLUSH_INTERVAL * 1000);
   } else {
     //Temperatur höher 
     printTemp("heizen", tempIn, tempOut);
@@ -96,4 +94,8 @@ void loop() {
     
     printTemp("heizen fertig", checkIn, checkOut);
   }
+
+  //Warten biszum nächsten Spülen
+  digitalWrite(RELAY, LOW);
+  delay(FLUSH_INTERVAL * 1000);
 }
