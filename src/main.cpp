@@ -23,11 +23,12 @@ DallasTemperature sensorsB(&oneWireB);
 #define TOLERANCE 3
 
 //Temperaturen und Status ausgeben
-void printTemp(char state, float in, float out){
+void printTemp(String state, float in, float out){
+    Serial.print("EIngang: ");
     Serial.print(in);
-    Serial.print(" ");
+    Serial.print("°C | Ausgang: ");
     Serial.print(out);
-    Serial.print(" ");
+    Serial.print("°C | Status: ");
     Serial.println(state);
 }
 
@@ -53,28 +54,28 @@ void setup() {
 
   //Serieller Kram für Serial Plotter
   Serial.begin(9600);
-  Serial.println("Eingang Ausgang Status");
+  Serial.println("Solar-Controller bereit");
 }
 
 void loop() {
   //flush
-  printTemp('10', getIn(), getOut());
+  printTemp("spülen", getIn(), getOut());
   digitalWrite(RELAY, HIGH);
   delay(FLUSH_DURATION * 1000);
   
   //messen
   float tempIn = getIn();
   float tempOut = getOut(); 
-  printTemp('10', tempIn, tempOut);
+  printTemp("spülen fertig", tempIn, tempOut);
 
   if(tempOut <= tempIn + TOLERANCE){
     //Temperatur niedriger > warten 
-    printTemp('0', tempIn, tempOut);
+    printTemp("warten", tempIn, tempOut);
     digitalWrite(RELAY, LOW);
     delay(FLUSH_INTERVAL * 1000);
   } else {
     //Temperatur höher 
-    printTemp('20', tempIn, tempOut);
+    printTemp("heizen", tempIn, tempOut);
     delay(PUMP_DURATION * 1000);
   }
 }
