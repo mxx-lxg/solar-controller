@@ -78,7 +78,7 @@ void loop() {
   } else {
     //Temperatur höher 
     printTemp("heizen", tempIn, tempOut);
-    //delay(PUMP_DURATION * 1000); //ohne Prüfung feste Zeit laufen
+    //delay(PUMP_DURATION * 1000); //ohne Zwischenprüfung feste Zeit laufen
     
 
     //laufen mit Zwischenprüfung (dynamischer)
@@ -91,5 +91,9 @@ void loop() {
       printTemp("heizen", checkIn, checkOut);
       delay(PUMP_DURATION * 1000);
     }
+    
+    checkIn = getIn();
+    checkOut = getOut(); 
+    printTemp("heizen fertig", checkIn, checkOut);
   }
 }
