@@ -23,6 +23,9 @@ DallasTemperature sensors(&oneWire);
 #define TURNON_TOLERANCE 3
 #define TURNOFF_TOLERANCE 2
 
+//Ausgleich Messwerte
+#define CALIBRATION_OFFSET = -1
+
 //Temperaturen und Status ausgeben
 void printTemp(String state, float in, float out){
     //Serial Ausgabe
@@ -49,7 +52,7 @@ float getIn(){
 //Temperatur Ausgang
 float getOut(){
   sensors.requestTemperatures();
-  return sensors.getTempCByIndex(1);
+  return sensors.getTempCByIndex(1) + CALIBRATION_OFFSET;
 }
 
 void setup() {
