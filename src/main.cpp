@@ -1,62 +1,82 @@
 #include <Arduino.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h> // Vorher hinzugefügte LiquidCrystal_I2C Bibliothek einbinden
 
+LiquidCrystal_I2C lcd(0x3F, 16, 2); 
 //Pins
 #define RELAY 13
-#define TEMP_IN 2
-#define TEMP_OUT 3
+#define ONE_WIRE 2
 
 //Sensor Objekte
-OneWire oneWireA(TEMP_IN);
-DallasTemperature sensorsA(&oneWireA);
-
-OneWire oneWireB(TEMP_OUT);
-DallasTemperature sensorsB(&oneWireB);
+OneWire oneWire(ONE_WIRE);
+DallasTemperature sensors(&oneWire);
 
 
 //Zeitangaben in Sekunden
 #define FLUSH_INTERVAL 10L //Wie oft solll im Warte-Zustand geprüft werden
-#define FLUSH_DURATION 5L //Pumpen-Laufzeit zur Prüfung
-#define PUMP_DURATION 5L //Wartezeit zur nächsten Prüfung/Messung
+#define FLUSH_DURATION 10L //Pumpen-Laufzeit zur Prüfung
+#define PUMP_DURATION 1L //Wartezeit zur nächsten Prüfung/Messung
 
 //Temperatur-Toleranz in °C
 #define TURNON_TOLERANCE 3
-#define TURNOFF_TOLERANCE 1
+#define TURNOFF_TOLERANCE 2
 
 //Temperaturen und Status ausgeben
 void printTemp(String state, float in, float out){
+    //Serial Ausgabe
     Serial.print("Eingang: ");
     Serial.print(in);
     Serial.print("°C | Ausgang: ");
     Serial.print(out);
     Serial.print("°C | Status: ");
     Serial.println(state);
+
+    //LCD Ausgabe
+    
 }
 
 //Temperatur Eingang
 float getIn(){
-  sensorsA.requestTemperatures();
-  return sensorsA.getTempCByIndex(0);
+  sensors.requestTemperatures();
+  return sensors.getTempCByIndex(0);
 }
 
 //Temperatur Ausgang
 float getOut(){
-  sensorsB.requestTemperatures();
-  return sensorsB.getTempCByIndex(0);
+  sensors.requestTemperatures();
+  return sensors.getTempCByIndex(1);
 }
 
 void setup() {
+  //LCD Init
+  lcd.init(); 
+  lcd.backlight(); 
+
+  lcd.setCursor(0, 0);
+  lcd.print("Solar-Controller"); 
+  lcd.setCursor(0, 1);
+  lcd.print("by mxx-lxg"); 
+
   //Relais Pin-Belegung
   pinMode(RELAY, OUTPUT);
   
   //Sensor Initialisierung
-  sensorsA.begin();
-  sensorsB.begin();
+  sensors.begin();
 
   //Serieller Kram für Serial Monitor
   Serial.begin(9600);
   Serial.println("Solar-Controller bereit");
+
+  lcd.setCursor(0, 0);
+  lcd.print("Solar-Controller bereit"); 
+
+  //entlüften
+  /*Serial.println("entlüften");
+  digitalWrite(RELAY, HIGH);
+  delay(30000);
+  digitalWrite(RELAY, LOW);*/
 }
 
 
