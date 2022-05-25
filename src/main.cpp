@@ -34,7 +34,10 @@ void printTemp(String state, float in, float out){
     Serial.println(state);
 
     //LCD Ausgabe
-    
+    lcd.setCursor(0, 0);
+    lcd.print("IN: " + in + "°C OUT: " + out + "°C"); 
+    lcd.setCursor(0, 1);
+    lcd.print(state); 
 }
 
 //Temperatur Eingang
