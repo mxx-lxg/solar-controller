@@ -120,7 +120,7 @@ void loop() {
       checkOut = getOut(); 
     }
     
-    printTemp("heizen fertig", checkIn, checkOut);
+    printTemp("fertig", checkIn, checkOut);
   }
 
   //Warten biszum nächsten Spülen
