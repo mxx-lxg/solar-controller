@@ -24,7 +24,7 @@ DallasTemperature sensors(&oneWire);
 #define TURNOFF_TOLERANCE 2
 
 //Ausgleich Messwerte
-#define CALIBRATION_OFFSET = -1
+#define CALIBRATION_OFFSET -1
 
 //Temperaturen und Status ausgeben
 void printTemp(String state, float in, float out){
@@ -38,9 +38,11 @@ void printTemp(String state, float in, float out){
 
     //LCD Ausgabe
     lcd.setCursor(0, 0);
-    lcd.print("IN: " + in + "°C OUT: " + out + "°C"); 
-    lcd.setCursor(0, 1);
+    lcd.print("IN: " + (String)in + "°C"); 
+    lcd.setCursor(10, 0);
     lcd.print(state); 
+    lcd.setCursor(0, 1);
+    lcd.print("OUT: " + (String)out + "°C"); 
 }
 
 //Temperatur Eingang
