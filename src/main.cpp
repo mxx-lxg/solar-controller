@@ -98,7 +98,7 @@ void loop() {
   float tempIn = getIn();
   float tempOut = getOut(); 
   
-  printTemp("spülen fertig", tempIn, tempOut);
+  printTemp("fertig", tempIn, tempOut);
 
   if(tempOut <= tempIn + TURNON_TOLERANCE){
     //Temperatur niedriger > nichts tun 
