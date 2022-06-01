@@ -4,7 +4,7 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h> // Vorher hinzugefügte LiquidCrystal_I2C Bibliothek einbinden
 
-LiquidCrystal_I2C lcd(0x3F, 16, 2); 
+LiquidCrystal_I2C lcd(0x27, 16, 2); 
 //Pins
 #define RELAY 13
 #define ONE_WIRE 2
@@ -38,11 +38,11 @@ void printTemp(String state, float in, float out){
 
     //LCD Ausgabe
     lcd.setCursor(0, 0);
-    lcd.print("IN: " + (String)in + "°C"); 
+    lcd.print("I " + String(in, 1) + (char)223 + "C"); 
     lcd.setCursor(10, 0);
     lcd.print(state); 
     lcd.setCursor(0, 1);
-    lcd.print("OUT: " + (String)out + "°C"); 
+    lcd.print("O " + String(out, 1) + (char)223 + "C"); 
 }
 
 //Temperatur Eingang
@@ -79,7 +79,7 @@ void setup() {
 
   lcd.setCursor(0, 0);
   lcd.print("Solar-Controller bereit"); 
-
+  lcd.clear();
   //entlüften
   /*Serial.println("entlüften");
   digitalWrite(RELAY, HIGH);
@@ -90,7 +90,7 @@ void setup() {
 
 void loop() {
   //flush
-  printTemp("spülen", getIn(), getOut());
+  printTemp("sp\365len", getIn(), getOut());
   digitalWrite(RELAY, HIGH);
   delay(FLUSH_DURATION * 1000);
   
@@ -99,6 +99,13 @@ void loop() {
   float tempOut = getOut(); 
   
   printTemp("fertig", tempIn, tempOut);
+
+  if(tempIn < -100 || tempOut < -100){
+    //Fehler Augabe bei Sensor Problemen
+    printTemp("Fehler", tempIn, tempOut);
+    delay(5000);
+    return;
+  }
 
   if(tempOut <= tempIn + TURNON_TOLERANCE){
     //Temperatur niedriger > nichts tun 
