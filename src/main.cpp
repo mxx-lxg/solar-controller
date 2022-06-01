@@ -105,31 +105,32 @@ void loop() {
     printTemp("Fehler", tempIn, tempOut);
     delay(5000);
     return;
-  }
-
-  if(tempOut <= tempIn + TURNON_TOLERANCE){
-    //Temperatur niedriger > nichts tun 
-    printTemp("warten", tempIn, tempOut);
   } else {
-    //Temperatur höher 
-    printTemp("heizen", tempIn, tempOut);
-    //delay(PUMP_DURATION * 1000); //ohne Zwischenprüfung feste Zeit laufen
-    
+    if(tempOut <= tempIn + TURNON_TOLERANCE){
+        //Temperatur niedriger > nichts tun 
+        printTemp("warten", tempIn, tempOut);
+    } else {
+      //Temperatur höher 
+      printTemp("heizen", tempIn, tempOut);
+      //delay(PUMP_DURATION * 1000); //ohne Zwischenprüfung feste Zeit laufen
+      
 
-    //laufen mit Zwischenprüfung (dynamischer)
-    float checkIn = getIn();
-    float checkOut = getOut(); 
+      //laufen mit Zwischenprüfung (dynamischer)
+      float checkIn = getIn();
+      float checkOut = getOut(); 
 
-    while(checkOut > checkIn + TURNOFF_TOLERANCE){
-      printTemp("heizen", checkIn, checkOut);
-      delay(PUMP_DURATION * 1000);
-      checkIn = getIn();
-      checkOut = getOut(); 
+      while(checkOut > checkIn + TURNOFF_TOLERANCE){
+        printTemp("heizen", checkIn, checkOut);
+        delay(PUMP_DURATION * 1000);
+        checkIn = getIn();
+        checkOut = getOut(); 
+      }
+      
+      printTemp("fertig", checkIn, checkOut);
     }
-    
-    printTemp("fertig", checkIn, checkOut);
   }
 
+  
   //Warten biszum nächsten Spülen
   digitalWrite(RELAY, LOW);
   delay(FLUSH_INTERVAL * 1000);
